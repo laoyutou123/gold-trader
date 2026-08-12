@@ -1,0 +1,11 @@
+{
+  "name": "黄金模拟交易系统",
+  "short_name": "黄金模拟盘",
+  "description": "实时金价行情、自动买卖信号推送、模拟盘交易",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0e17",
+  "theme_color": "#0a0e17",
+  "icons": []
+}
