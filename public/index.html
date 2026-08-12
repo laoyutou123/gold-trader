@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0a0e17">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="黄金模拟盘">
+  <link rel="manifest" href="manifest.json">
+  <title>黄金模拟交易 - 实时行情</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- 顶部状态栏 -->
+    <header class="header">
+      <div class="header-left">
+        <h1 class="logo">⚡ 黄金模拟盘</h1>
+        <span class="status-dot" id="statusDot"></span>
+        <span class="status-text" id="statusText">连接中...</span>
+      </div>
+      <div class="header-right">
+        <button class="btn-icon" id="resetBtn" title="重置账户">↻</button>
+      </div>
+    </header>
+
+    <!-- 当前金价 -->
+    <section class="price-section">
+      <div class="price-label">XAU/USD 现货黄金</div>
+      <div class="price-main">
+        <span class="price-value" id="currentPrice">--</span>
+        <span class="price-unit">USD/oz</span>
+      </div>
+      <div class="price-meta">
+        <span class="price-change" id="priceChange">--</span>
+        <span class="price-update" id="priceTime">--</span>
+      </div>
+    </section>
+
+    <!-- 信号面板 -->
+    <section class="signal-section" id="signalSection">
+      <div class="signal-header">
+        <span class="signal-title">🎯 交易信号</span>
+        <span class="signal-strength" id="signalStrength">--</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-action" id="signalAction">
+          <span class="signal-badge hold">等待信号</span>
+        </div>
+        <div class="signal-reasons" id="signalReasons">
+          <div class="reason-item">正在分析市场数据...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 指标面板 -->
+    <section class="indicators-section">
+      <div class="section-title">📊 技术指标</div>
+      <div class="indicators-grid" id="indicatorsGrid">
+        <div class="indicator-card"><span class="ind-label">MA5</span><span class="ind-value" id="indMA5">--</span></div>
+        <div class="indicator-card"><span class="ind-label">MA10</span><span class="ind-value" id="indMA10">--</span></div>
+        <div class="indicator-card"><span class="ind-label">MA20</span><span class="ind-value" id="indMA20">--</span></div>
+        <div class="indicator-card"><span class="ind-label">RSI(14)</span><span class="ind-value" id="indRSI">--</span></div>
+        <div class="indicator-card"><span class="ind-label">MACD</span><span class="ind-value" id="indMACD">--</span></div>
+        <div class="indicator-card"><span class="ind-label">布林带</span><span class="ind-value" id="indBoll">--</span></div>
+      </div>
+    </section>
+
+    <!-- K线图表 -->
+    <section class="chart-section">
+      <div class="section-title">📈 K线图 (1分钟)</div>
+      <div class="chart-container">
+        <canvas id="priceChart"></canvas>
+      </div>
+    </section>
+
+    <!-- 账户概览 -->
+    <section class="account-section">
+      <div class="section-title">💰 我的账户</div>
+      <div class="account-grid">
+        <div class="account-card highlight"><span class="acc-label">总资产</span><span class="acc-value" id="totalAssets">$100,000</span></div>
+        <div class="account-card"><span class="acc-label">可用现金</span><span class="acc-value" id="cashBalance">$100,000</span></div>
+        <div class="account-card"><span class="acc-label">累计盈亏</span><span class="acc-value" id="totalPnl">$0.00</span></div>
+        <div class="account-card"><span class="acc-label">胜率</span><span class="acc-value" id="winRate">0%</span></div>
+      </div>
+    </section>
+
+    <!-- 当前持仓 -->
+    <section class="position-section" id="positionSection" style="display:none;">
+      <div class="section-title">📋 当前持仓</div>
+      <div class="position-grid">
+        <div class="pos-card"><span class="pos-label">持仓量</span><span class="pos-value" id="posGold">0 oz</span></div>
+        <div class="pos-card"><span class="pos-label">均价</span><span class="pos-value" id="posAvgPrice">$0</span></div>
+        <div class="pos-card"><span class="pos-label">浮动盈亏</span><span class="pos-value" id="posPnl">$0.00</span></div>
+        <div class="pos-card"><span class="pos-label">盈亏比例</span><span class="pos-value" id="posPnlPercent">0%</span></div>
+      </div>
+    </section>
+
+    <!-- 交易操作 -->
+    <section class="trade-section">
+      <div class="trade-amount">
+        <label>交易金额 (USD)</label>
+        <div class="amount-input">
+          <input type="number" id="tradeAmount" placeholder="留空=全仓" min="0">
+          <button class="btn-quick" data-percent="25">25%</button>
+          <button class="btn-quick" data-percent="50">50%</button>
+          <button class="btn-quick" data-percent="100">100%</button>
+        </div>
+      </div>
+      <div class="trade-buttons">
+        <button class="btn-trade btn-buy" id="buyBtn"><span class="btn-label">买入</span><span class="btn-sub">做多黄金</span></button>
+        <button class="btn-trade btn-sell" id="sellBtn"><span class="btn-label">卖出</span><span class="btn-sub">平仓/做空</span></button>
+      </div>
+    </section>
+
+    <!-- 交易记录 -->
+    <section class="history-section">
+      <div class="section-title">📝 交易记录</div>
+      <div class="trade-list" id="tradeList">
+        <div class="empty-state">暂无交易记录</div>
+      </div>
+    </section>
+
+    <!-- 通知 toast -->
+    <div class="toast-container" id="toastContainer"></div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
